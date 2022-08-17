@@ -32,12 +32,6 @@ public class SupplierController {
         return "dashboard";
     }
 
-//    @GetMapping("/new_order")
-//    public String addOrder(Model model) {
-//
-//        return "orders";
-//    }
-
 
     @GetMapping("/orders")
     public String order(Model model) {
@@ -66,9 +60,12 @@ public class SupplierController {
     @GetMapping("/orders/{id}/edit")
     public String updateOrder(@PathVariable int id, Model model) {
         var order = (Order)repo.getOrder(id);
+        var parts = repo2.getAllParts();
+
         model.addAttribute("title", "Order No - " + order.getId());
         model.addAttribute("id", id);
         model.addAttribute("order", order);
+        model.addAttribute("parts", parts);
 
         if(!repo.orderDelivered(id)){
             return "order_detail_edit";
@@ -79,6 +76,7 @@ public class SupplierController {
     @PostMapping("/orders/{id}/edit")
     public String updateOrder1(@PathVariable int id, Model model, @ModelAttribute OrderUpdateDto dto) {
         var order = (Order)repo.getOrder(id);
+
 
         model.addAttribute("title", "Order No - "  + order.getId());
         model.addAttribute("id", id);

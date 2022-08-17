@@ -62,9 +62,10 @@
                 <select  id="partNo" name="partNo">
                     <option th:text="${order.getPartNo()}"></option>
                     <option></option>
-                    <option>Raw material</option>
-                    <option>Fasteners</option>
-                    <option>Turning/milling</option>
+                        <option th:each="part : ${parts}"
+                                th:value="${part.getNumber()}"
+                                th:text="${part.getNumber()}"></option>
+                    </select>
                 </select>
             </td>
         </tr>
