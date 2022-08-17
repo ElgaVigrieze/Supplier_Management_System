@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+
+
+.button1 {
+  height: 150px;
+  width: 150px;
+  padding-top: 25px
+  align-items: center;
+  font-weight: 500;
+  color: black;
+  background: #90EE90;
+border: none;
+border-radius: 25px;
+border-collapse: separate;
+  letter-spacing: 0.05em;
+}
+
+.button2 {
+  height: 150px;
+  width: 150px;
+  padding-top: 25px
+  align-items: center;
+  font-weight: 500;
+  color: black;
+  background: #FFD580;
+border: none;
+border-radius: 25px;
+border-collapse: separate;
+  letter-spacing: 0.05em;
+}
+        </style>
+
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">
+                <img th:src="@{/img/clip.svg}" alt="Suppliers" width="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/suppliers">Suppliers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/dpm">Delivery performance</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <body style="margin: 0;">
+    <div style="background-color: white; width: 100%; height: 700px;">
+<!--        <div style="background-color: lightseagreen; width: 50%; float: left; height: 700px;">-->
+            <div style="width: 70%;height: 100%; float: left;">
+                <h1 th:text="${title}"></h1>
+
+                <details>
+                    <summary>
+                        <h3 th:text="${title2}"></h3>
+                    </summary>
+                    <p>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Total orders</th>
+                            <th>Total orders delivered</th>
+                            <th>Total open orders</th>
+                            <th>Total late orders</th>
+
+                        <tr/>
+                        </thead>
+                        <tbody>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders'}"  th:text="${ordersCount}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_delivered'}"  th:text="${ordersDeliveredCount}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_open'}"  th:text="${openOrdersCount}" ></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_late'}"  th:text="${openLateOrdersCount}"  ></a>
+                        </td>
+
+                        </tbody>
+                    </table>
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        <h3 th:text="${title3}"></h3>
+                    </summary>
+                    <p>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Current total</th>
+                            <th colspan="12" th:text="${year}"></th>
+
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td></td>
+                            <td>January</td>
+                            <td>February</td>
+                            <td>March</td>
+                            <td>April</td>
+                            <td>May</td>
+                            <td>June</td>
+                            <td>July</td>
+                            <td>August</td>
+                            <td>September</td>
+                            <td>October</td>
+                            <td>November</td>
+                            <td>December</td>
+                        </tr>
+                        <tbody>
+                        <td>
+                            <a  th:href="${'/suppliers/'+id + '/orders'}"   th:text= "${supplier.getSupplierPerformance(id)}"></a>
+                        </td>
+                        <td >
+                            <a  th:href="${'/suppliers/'+id + '/orders_month/'+1}"  th:text="${supplier.getSupplierPerformancePerMonth(id,1)}" ></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+2}" th:text="${supplier.getSupplierPerformancePerMonth(id,2)} " th:value="month"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+3}" th:text="${supplier.getSupplierPerformancePerMonth(id,3)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+4}" th:text="${supplier.getSupplierPerformancePerMonth(id,4)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+5}" th:text="${supplier.getSupplierPerformancePerMonth(id,5)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+6}"th:text="${supplier.getSupplierPerformancePerMonth(id,6)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+7}" th:text="${supplier.getSupplierPerformancePerMonth(id,7)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+8}" th:text="${supplier.getSupplierPerformancePerMonth(id,8)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+9}" th:text="${supplier.getSupplierPerformancePerMonth(id,9)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+10}" th:text="${supplier.getSupplierPerformancePerMonth(id,10)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+11}"th:text="${supplier.getSupplierPerformancePerMonth(id,11)}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${'/suppliers/'+id + '/orders_month/'+12}" th:text="${supplier.getSupplierPerformancePerMonth(id,12)}"></a>
+                        </td>
+
+                    </table>
+                    </p>
+                </details>
+
+            </div>
+            <div style=" width: 30%;height: 100%; float: left;">
+                <a th:href="${'/suppliers/'+id + '/edit'}">
+                    <button class="button2"  >
+                        <h4>Update<br>supplier<br>info</h4>
+
+                        <img th:src="@{/img/up.svg}" alt="Forward" float="right" width="30">
+                    </button>
+                </a>
+
+            </div>
+<!--        </div>-->
+
+    </div>
+    </body>
+
+
+
+
+    <div>
+
+    </div>
+
+
+
+
+
+
+
+</div>
+</body>
+</html>
