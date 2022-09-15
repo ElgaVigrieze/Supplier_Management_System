@@ -6,6 +6,11 @@ import org.hibernate.cfg.Configuration;
 
 
 public class DeliveryPerformance {
+    private Double supplierPerformanceGeneral;
+    private Double supplierPerformancePerSupplier;
+    private Double supplierPerformancePerMonth;
+    private Double supplierPerformancePerMonthPerSupplier;
+
     private static SessionFactory factory;
 
     public DeliveryPerformance() {
@@ -20,6 +25,33 @@ public class DeliveryPerformance {
             System.err.println("Failed to create sessionFactory object." + ex);
             throw new ExceptionInInitializerError(ex);
         }
+    }
+    public Double getSupplierPerformancePerSupplier(int supplierId){ //performance general total per supplier
+        if(getCountOfOrdersPerSupplier(supplierId)==0){
+            return null;
+        }
+        return (double)getCountOfOrdersDeliveredOnTimePerSupplier(supplierId) / (double) getCountOfOrdersPerSupplier(supplierId);
+    }
+
+    public Double getSupplierPerformanceGeneral(){ //performance general total
+        if(getCountOfOrdersPerSupplier()==0){
+            return null;
+        }
+        return (double)getCountOfOrdersDeliveredOnTime() / (double) getCountOfOrders();
+    }
+
+    public Double getSupplierPerformancePerMonthPerSupplier(int supplierId, int month){ //performance per month per supplier
+        if(getCountOfOrdersPerSupplierPerMonth(supplierId, month)==0){
+            return null;
+        }
+        return (double)getCountOfOrdersDeliveredOnTimePerSupplier(supplierId, month)/(double) getCountOfOrdersPerSupplierPerMonth(supplierId,month);
+    }
+
+    public Double getSupplierPerformancePerMonth(int month){  //performance per month
+        if(getCountOfOrdersPerMonth(month)==0){
+            return null;
+        }
+        return (double)getCountOfOrdersDeliveredOnTimePerMonth(month)/(double) getCountOfOrdersPerMonth(month);
     }
 
     public long getCountOfOrdersPerSupplierPerMonth(int supplierId, int month) {
@@ -183,33 +215,7 @@ public class DeliveryPerformance {
         return 0;
     }
 
-    public Double getSupplierPerformance(int supplierId){ //performance general total per supplier
-        if(getCountOfOrdersPerSupplier(supplierId)==0){
-            return null;
-        }
-        return (double)getCountOfOrdersDeliveredOnTimePerSupplier(supplierId) / (double) getCountOfOrdersPerSupplier(supplierId);
-    }
 
-    public Double getSupplierPerformance(){ //performance general total
-        if(getCountOfOrdersPerSupplier()==0){
-            return null;
-        }
-        return (double)getCountOfOrdersDeliveredOnTime() / (double) getCountOfOrders();
-    }
-
-    public Double getSupplierPerformancePerMonth(int supplierId, int month){ //performance per month per supplier
-        if(getCountOfOrdersPerSupplierPerMonth(supplierId, month)==0){
-            return null;
-        }
-        return (double)getCountOfOrdersDeliveredOnTimePerSupplier(supplierId, month)/(double) getCountOfOrdersPerSupplierPerMonth(supplierId,month);
-    }
-
-    public Double getSupplierPerformancePerMonth(int month){  //performance per month
-        if(getCountOfOrdersPerMonth(month)==0){
-            return null;
-        }
-        return (double)getCountOfOrdersDeliveredOnTimePerMonth(month)/(double) getCountOfOrdersPerMonth(month);
-    }
 
 
 }

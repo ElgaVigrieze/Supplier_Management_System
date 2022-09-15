@@ -15,7 +15,7 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/dashboard">
+            <a class="navbar-brand" href="/">
                 <img th:src="@{/img/clip.svg}" alt="Suppliers" width="30">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,13 +24,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/suppliers">Suppliers</a>
+                        <a class="nav-link" aria-current="page" href="/pages/suppliers">Suppliers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/orders">Orders</a>
+                        <a class="nav-link" aria-current="page" href="/pages/orders">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/dpm">Delivery performance</a>
+                        <a class="nav-link" aria-current="page" href="/pages/dpm">Delivery performance</a>
                     </li>
                 </ul>
             </div>
@@ -40,7 +40,7 @@
 
     <h3 th:text="${title}"></h3>
 
-    <form method="post" th:action="${'/suppliers/'+supplier.getId()+'/edit/confirm'}" name="supplierUpdateDto2">
+    <form method="post" th:action="${'/pages/suppliers/'+supplier.getId()+'/edit/confirm'}" name="supplierSaveDto">
     <table>
         <tr>
             <th>Id: </th>
@@ -71,7 +71,7 @@
         </tr>
     </table>
         <button type="submit" class="btn btn-success">Confirm</button>
-        <a th:href="${'/suppliers/'+id}" class="btn btn-danger" role="button">Cancel</a>
+        <a th:href="${'/pages/suppliers/'+id}" class="btn btn-danger" role="button">Cancel</a>
     </form>
 
 

@@ -165,17 +165,17 @@ public class SupplierController {
         return "order_delete";
 }
 
-    @PostMapping("/orders/{id}/delete")
-    public ModelAndView deleteOrderPost(@PathVariable int id, Model model) {
-        var order= (Order)repo.getOrder(id);
-        model.addAttribute("title", "Order No " + order.getId());
-        model.addAttribute("order", order);
-        model.addAttribute("id", id);
-
-        repo.delete(order.getId());
-
-        return new ModelAndView("redirect:/orders");
-    }
+//    @PostMapping("/orders/{id}/delete")
+//    public ModelAndView deleteOrderPost(@PathVariable int id, Model model) {
+//        var order= (Order)repo.getOrder(id);
+//        model.addAttribute("title", "Order No " + order.getId());
+//        model.addAttribute("order", order);
+//        model.addAttribute("id", id);
+//
+//        repo.delete(order.getId());
+//
+//        return new ModelAndView("redirect:/orders");
+//    }
 
     @GetMapping("/new_order")
     public String newOrder(Model model) {
@@ -189,16 +189,16 @@ public class SupplierController {
         return "new_order";
     }
 
-    @PostMapping("/new_order")
-    public ModelAndView newOrder(@ModelAttribute("orderSaveDto") OrderSaveDto dto, Model model) {
-        var order = repo.add(dto);
-        var orders = repo.getOrders();
-        model.addAttribute("title", "Create new order");
-        model.addAttribute("order", order);
-        model.addAttribute("orders", orders);
-
-        return new ModelAndView("redirect:/orders");
-    }
+//    @PostMapping("/new_order")
+//    public ModelAndView newOrder(@ModelAttribute("orderSaveDto") OrderSaveDto dto, Model model) {
+//        var order = repo.add(dto);
+//        var orders = repo.getOrders();
+//        model.addAttribute("title", "Create new order");
+//        model.addAttribute("order", order);
+//        model.addAttribute("orders", orders);
+//
+//        return new ModelAndView("redirect:/orders");
+//    }
 
     @GetMapping("/new_supplier")
     public String newSupplier(Model model) {

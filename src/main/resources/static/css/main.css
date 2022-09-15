@@ -1,0 +1,40 @@
+.button1 {
+  height: 150px;
+  width: 150px;
+  padding-top: 25px
+  align-items: center;
+  font-weight: 500;
+  color: black;
+  background: #90EE90;
+border: none;
+border-radius: 25px;
+border-collapse: separate;
+  letter-spacing: 0.05em;
+}
+
+.button2 {
+  height: 150px;
+  width: 150px;
+  padding-top: 25px
+  align-items: center;
+  font-weight: 500;
+  color: black;
+  background: #FFD580;
+border: none;
+border-radius: 25px;
+border-collapse: separate;
+  letter-spacing: 0.05em;
+}
+.button3 {
+  height: 150px;
+  width: 150px;
+  padding-top: 25px
+  align-items: center;
+  font-weight: 500;
+  color: black;
+  background: #E78587 ;
+border: none;
+border-radius: 25px;
+border-collapse: separate;
+  letter-spacing: 0.05em;
+}

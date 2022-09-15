@@ -1,4 +1,5 @@
 package com.company.springmvcweb.data;
+import com.company.springmvcweb.dto.OrderSaveDto;
 import com.company.springmvcweb.dto.SupplierSaveDto;
 import lombok.NonNull;
 import org.hibernate.HibernateException;
@@ -6,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,6 @@ public class SupplierRepository {
     public Integer add(@NonNull Supplier supplier){
         var session = factory.openSession();
         Integer supplierId = null;
-
         try{
             supplierId = (Integer)session.save(supplier);
         }catch (HibernateException ex){
@@ -73,7 +74,7 @@ public class SupplierRepository {
     }
 
     public Integer add(SupplierSaveDto dto) {
-        var supplier = new Supplier(0, dto.getName(),dto.getCategory(), dto.getVATNo());
+        var supplier = new Supplier(0, dto.getName(), dto.getCategory(), dto.getVATNo(), dto.getEMail());
         return add(supplier);
     }
 
@@ -117,6 +118,12 @@ public class SupplierRepository {
         }
     }
 
-
+    public void update(SupplierSaveDto dto) {
+        Supplier updatedSupplier = (Supplier)getSupplier(dto.getId());
+        updatedSupplier.setName(dto.getName());
+        updatedSupplier.setCategory(dto.getCategory());
+        updatedSupplier.setEMail(dto.getEMail());
+        update(updatedSupplier);
+    }
 
 }

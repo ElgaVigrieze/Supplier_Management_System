@@ -24,27 +24,27 @@ public class Supplier {
     private String eMail;
     @Transient
     private double supplierPerformance;
-    private static DeliveryPerformance repo = new DeliveryPerformance();
 
-    public Supplier(int id, String name, String category, String VATNo) {
+    public Supplier(int id, String name, String category, String VATNo, String eMail) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.VATNo = VATNo;
+        this.eMail = eMail;
     }
 
-    public Double getSupplierPerformance(int id) {
+    public Double getSupplierPerformance() {
         var repo = new DeliveryPerformance();
-        var dpm = repo.getSupplierPerformance(id);
+        var dpm = repo.getSupplierPerformancePerSupplier(id);
         if(dpm == null){
             return null;
         }
         return Math.round(dpm*100.0)/100.0*100.0;
     }
 
-    public Double getSupplierPerformance() {
+    public Double getSupplierPerformanceGeneral() {
         var repo = new DeliveryPerformance();
-        var dpm = repo.getSupplierPerformance();
+        var dpm = repo.getSupplierPerformanceGeneral();
         if(dpm == null){
             return null;
         }
@@ -53,7 +53,7 @@ public class Supplier {
 
     public Double getSupplierPerformancePerMonth(int supplierId, int month){
         var repo = new DeliveryPerformance();
-        var dpm = repo.getSupplierPerformancePerMonth(supplierId, month);
+        var dpm = repo.getSupplierPerformancePerMonthPerSupplier(supplierId, month);
         if(dpm == null){
             return null;
         }
