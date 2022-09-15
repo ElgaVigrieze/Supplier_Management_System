@@ -65,7 +65,7 @@
            $(tableId).empty();
                 response.forEach(function(order){
                 let row = '<tr>';
-                row += '<td><a href="/pages/orders/'+order.id+'">'+order.id+'</a></td>';
+                row += '<td><a href="/pages/orders/'+order.id+'/edit">'+order.id+'</a></td>';
                  row += '<td>'+order.orderDate+'</td>';
                  row += '<td>'+order.supplier.name+'</td>';
                  row += '<td>'+order.partNo+'</td>';

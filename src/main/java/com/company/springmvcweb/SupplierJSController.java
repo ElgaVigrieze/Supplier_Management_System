@@ -30,19 +30,16 @@ public class SupplierJSController {
     }
 
     @GetMapping("/suppliers")
-    public String supplier(Model model) {
+    public String supplier() {
 
         return "suppliers_js";
     }
 
     @GetMapping("/orders")
     public String orders(Model model) {
-        var items = repo.getOrders();
         var suppliers = repo1.getSuppliers();
         var parts = repo2.getAllParts();
-
         model.addAttribute("title", "Orders");
-        model.addAttribute("orders", items);
         model.addAttribute("suppliers", suppliers);
         model.addAttribute("parts", parts);
         return "orders_js";
@@ -82,9 +79,11 @@ public class SupplierJSController {
     @GetMapping("/orders/{id}/edit")
     public String updateOrder(@PathVariable int id, Model model) {
         var order = (Order)repo.getOrder(id);
+        var parts = repo2.getAllParts();
         model.addAttribute("title", "Order No - " + id);
         model.addAttribute("id", id);
         model.addAttribute("order", order);
+        model.addAttribute("parts", parts);
         if(!repo.orderDelivered(id)){
             return "order_detail_edit_js";
         }
@@ -109,75 +108,28 @@ public class SupplierJSController {
         return new ModelAndView("redirect:/pages/orders");
     }
 
-//    @GetMapping("/orders/{id}/delete")
-//    public ModelAndView deleteOrder(@PathVariable int id) {
-//        repo.delete(id);
-//        return new ModelAndView("redirect:/pages/orders");
-//    }
-//    @GetMapping("/orders/{id}/delete")
-//    public ModelAndView deleteOrder() {
-//        return new ModelAndView("redirect:/pages/orders");
-//    }
-
     @GetMapping("/suppliers/{id}")
     public String viewSupplier(@PathVariable int id, Model model) {
         var year = LocalDate.now().getYear();
         var monthsString = new DateFormatSymbols().getMonths();
         var monthNames= Arrays.asList(monthsString);
         var months= IntStream.range(1, 12).boxed().collect(Collectors.toList());
-        var totalOrderCount = repo.getCountOfOrdersPerSupplier(id);
-        var openOrdersCount = repo.getCountOfOpenOrdersPerSupplier(id);
-        var openLateOrdersCount = repo.getCountOfOpenLateOrdersPerSupplier(id);
-        var ordersDeliveredCount = repo.getCountOfOrdersDeliveredPerSupplier(id);
         model.addAttribute("months", months);
         model.addAttribute("monthNames", monthNames);
         model.addAttribute("supplier", new Supplier());
         model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "Orders");
         model.addAttribute("title3",  "Delivery performance");
-        model.addAttribute("ordersCount", totalOrderCount);
-        model.addAttribute("ordersDeliveredCount", ordersDeliveredCount);
-        model.addAttribute("openOrdersCount", openOrdersCount);
-        model.addAttribute("openLateOrdersCount", openLateOrdersCount);
-
         model.addAttribute("year", year);
         model.addAttribute("id", id);
 
         return "supplier_detail_links";
     }
 
-    @GetMapping("/suppliers/{id}/edit")
-    public String updateSupplier(@PathVariable int id, Model model) {
-        var supplier = (Supplier)repo1.getSupplier(id);
-        model.addAttribute("title", "Supplier info - " + supplier.getName());
-        model.addAttribute("id", id);
-        model.addAttribute("supplier", supplier);
-
-        return "supplier_detail_edit";
-    }
-
     @PostMapping("/suppliers/{id}/edit")
     public ModelAndView updateSupplier1() {
         return new ModelAndView("redirect:/pages/suppliers/{id}");
     }
-
-    @PostMapping("/suppliers/{id}/edit/confirm")
-    public ModelAndView updateSupplierConfirmPost(@PathVariable int id, @ModelAttribute("supplierUpdateDto2") SupplierUpdateDto dto2, Model model) {
-        var supplier = (Supplier)repo1.getSupplier(id);
-
-        model.addAttribute("title", "Supplier info - " + supplier.getName());
-        model.addAttribute("id", id);
-        model.addAttribute("supplier", supplier);
-
-        supplier.setName(dto2.getName());
-        supplier.setCategory(dto2.getCategory());
-        supplier.setEMail(dto2.getEMail());
-
-        repo1.update(supplier);
-
-        return new ModelAndView("redirect:/suppliers/{id}");
-    }
-
 
     @GetMapping("/suppliers/{id}/orders")
     public String viewSupplierAllOrders(@PathVariable int id, Model model) {
@@ -186,20 +138,6 @@ public class SupplierJSController {
         model.addAttribute("id", id);
 
         return "supplier_orders";
-    }
-
-    @GetMapping("/suppliers/{id}/orders_month/{month}")
-    public String viewSupplierOrdersPerMonthDelivered(@PathVariable int id, @PathVariable int month, Model model) {
-        var orders = repo.getOrdersToBeDeliveredPerMonth(id,month);
-
-        model.addAttribute("title", repo1.getSupplierName(id));
-        model.addAttribute("title2",  "All orders");
-        model.addAttribute("order", new Order());
-        model.addAttribute("orders", orders);
-        model.addAttribute("month", month);
-        model.addAttribute("id", id);
-
-        return "supplier_orders_month";
     }
 
     @GetMapping("/suppliers/{id}/orders_late")
@@ -227,35 +165,12 @@ public class SupplierJSController {
         return "supplier_orders";
     }
 
-
     @GetMapping("/dpm/orders/{month}")
     public String viewDeliveryPerformancePerMonth(@PathVariable int month, Model model) {
         model.addAttribute("title",  "Orders with delivery month "+ Month.of(month));
         model.addAttribute("month", month);
         return "dpm_orders";
     }
-
-
-    @GetMapping("/dpm/orders/{month}/late")
-    public String searchOrdersLate(@PathVariable int month, Model model) {
-        var orders = repo.getOrdersDeliveredLatePerMonth(month);
-        model.addAttribute("title",  "Orders with delivery month "+ Month.of(month) + ", late");
-        model.addAttribute("orders", orders);
-        model.addAttribute("month", month);
-
-        return "dpm_orders_select";
-    }
-
-    @GetMapping("/dpm/orders/{month}/on_time")
-    public String searchOrdersOnTime(@PathVariable int month, Model model) {
-        var orders = repo.getOrdersDeliveredOnTime(month);
-        model.addAttribute("title",  "Orders with delivery month "+ Month.of(month) + ", on time");
-        model.addAttribute("orders", orders);
-        model.addAttribute("month", month);
-
-        return "dpm_orders_select";
-    }
-
 
     @GetMapping("/dpm")
     public String viewDeliveryPerformance(Model model) {
@@ -273,13 +188,11 @@ public class SupplierJSController {
         return "dpm";
     }
 
-
     @GetMapping("/dpm/{id}/orders/{month}")
     public String viewOdersPerMonth(@PathVariable int month, @PathVariable int id,Model model) {
         model.addAttribute("title",  "Orders with delivery month "+ Month.of(month));
         model.addAttribute("month", month);
         model.addAttribute("id", id);
-
         return "dpm_orders_supplier";
     }
 
