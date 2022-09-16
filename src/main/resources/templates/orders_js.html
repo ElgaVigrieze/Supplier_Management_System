@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
+    <title th:text="${title}"></title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
@@ -20,17 +21,56 @@
           href="https://unpkg.com/ag-grid-community/styles/ag-grid.css"/>
     <link rel="stylesheet"
           href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css"/>
-
-
     <script>
+            $(document).ready(function() {
+            loadParts();
+            loadSuppliers();
+         });
+
+
+        function loadParts(){
+            const settings = {
+              "url": "http://localhost:8080/api/parts",
+              "method": "GET",
+              "timeout": 10000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#partNo').empty();
+             var option = '<option></option>';
+             $('#partNo').append(option);
+                response.forEach(function(part){
+                $('#partNo').append('<option value='+part.number+'>'+part.number+'</option>');
+            });
+            });
+           }
+
+         function loadSuppliers(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers",
+              "method": "GET",
+              "timeout": 10000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#supplierId').empty();
+             var option = '<option></option>';
+            $('#supplierId').append(option);
+                response.forEach(function(supplier){
+                $('#supplierId').append('<option value='+supplier.id+'>'+supplier.name+'</option>');
+            });
+            });
+           }
+
     function searchOrders(){
     fetch("http://localhost:8080/api/orders?supplierId="+$('#supplierId').val()+"&partNo="+$('#partNo').val()+"&status="+$('#status').val())
            .then(response => response.json())
            .then(data => {
-             gridOptions.api.setRowData(data);
+            gridOptions.api.setRowData(data);
            });
            }
-           </script>
+
+</script>
 </head>
 <body>
 <div class="container">
@@ -58,21 +98,12 @@
         </div>
     </nav>
 
+    <title th:text="${title}"></title>
         <div class="mb-3">
             <label for="supplierId">Choose supplier:</label>
-            <select id="supplierId" name="supplierId">
-                <option ></option>
-                <option th:each="supplier : ${suppliers}"
-                        th:value="${supplier.getId()}"
-                        th:text="${supplier.getName()}"></option>
-            </select>
+            <select id="supplierId"></select>
             <label for="partNo">Choose part number:</label>
-            <select  id="partNo" name="partNo">
-                <option></option>
-                <option th:each="part : ${parts}"
-                        th:value="${part.getNumber()}"
-                        th:text="${part.getNumber()}"></option>
-            </select>
+            <select  id="partNo"></select>
             <label for="status">Filter by status:</label>
             <select  id="status" name="status">
                 <option></option>

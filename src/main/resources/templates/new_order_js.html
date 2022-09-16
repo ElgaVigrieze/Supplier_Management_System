@@ -12,6 +12,47 @@
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script>
+
+                $(document).ready(function() {
+            loadParts();
+            loadSuppliers();
+         });
+
+
+        function loadParts(){
+            const settings = {
+              "url": "http://localhost:8080/api/parts",
+              "method": "GET",
+              "timeout": 10000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#partNo').empty();
+             var option = '<option></option>';
+             $('#partNo').append(option);
+                response.forEach(function(part){
+                $('#partNo').append('<option value='+part.number+'>'+part.number+'</option>');
+            });
+            });
+           }
+
+         function loadSuppliers(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers",
+              "method": "GET",
+              "timeout": 10000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#supplierId').empty();
+             var option = '<option></option>';
+            $('#supplierId').append(option);
+                response.forEach(function(supplier){
+                $('#supplierId').append('<option value='+supplier.id+'>'+supplier.name+'</option>');
+            });
+            });
+           }
+
     function saveOrder(){
     var settings = {
           "url": "http://localhost:8080/api/new_order",
@@ -70,19 +111,12 @@
 
             <label for="supplierId">Choose supplier:</label>
             <select id="supplierId" name="supplierId">
-                <option ></option>
-                <option th:each="supplier : ${suppliers}"
-                        th:value="${supplier.getId()}"
-                        th:text="${supplier.getName()}"></option>
             </select><br/>
             <br>
 
             <label for="partNo">Part number:</label>
             <select id="partNo" name="partNo">
-                <option></option>
-                <option th:each="part : ${parts}"
-                        th:value="${part.getNumber()}"
-                        th:text="${part.getNumber()}"></option>
+
             </select><br/>
 <!--            -->
             <label for="quantity">Quantity:</label>

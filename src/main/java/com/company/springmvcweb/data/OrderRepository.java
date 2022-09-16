@@ -190,10 +190,12 @@ public class OrderRepository {
 
     public void update(OrderSaveDto dto) {
         Order updatedOrder = (Order)getOrder(dto.getId());
+
         updatedOrder.setQuantityOrder(dto.getQuantityOrder());
         updatedOrder.setPartNo(dto.getPartNo());
         updatedOrder.setDeliveryDateOrder(LocalDate.parse(dto.getDeliveryDateOrder()));
         update(updatedOrder);
+        System.out.println(updatedOrder.getQuantityOrder());
     }
 
     public void delete(int id){

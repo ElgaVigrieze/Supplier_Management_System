@@ -13,12 +13,56 @@
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
 
+         $(document).ready(function() {
+            loadOrder();
+            loadParts();
+            var part = "";
+         });
+
+
+            function loadOrder(){
+            const settings = {
+              "url": "http://localhost:8080/api/orders/"+$('#id').val(),
+              "method": "GET",
+              "timeout": 1000
+            }
+
+            $.ajax(settings).done(function (response) {
+            part = response.partNo;
+             $('#orderData').append('<tr><td>'+response.id+'</td></tr>');
+             $('#orderData').append('<tr><td>'+response.orderDate+'</td></tr>');
+             $('#orderData').append('<tr><td>'+response.supplier.name+'</td></tr>');
+             $('#orderData').append('<tr><td><select id="partNo"></select></td></tr>');
+             $('#orderData').append('<tr><td><input id="quantityOrder" value="'+response.quantityOrder+'"></input></td></tr>');
+            $('#orderData').append('<tr><td><input type="date" id="deliveryDate" value="'+response.deliveryDateOrder+'" ></td></tr>');
+
+            });
+           }
+
+        function loadParts(){
+            const settings = {
+              "url": "http://localhost:8080/api/parts",
+              "method": "GET",
+              "timeout": 10000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#partNo').empty();
+             var option = '<option value='+part+'>'+part+'</option>';
+             $('#partNo').append(option);
+                response.forEach(function(part){
+                $('#partNo').append('<option value='+part.number+'>'+part.number+'</option>');
+            });
+            });
+           }
+
  function deleteOrder(){
       var settings = {
-      "url": "http://localhost:8080/api/orders/"+$('#id').text()+"/delete",
+      "url": "http://localhost:8080/api/orders/"+$('#id').val()+"/delete",
       "method": "DELETE",
       "timeout": 0,
         };
+
     $.ajax(settings).done(function (response) {
       console.log(response);
      });
@@ -26,16 +70,16 @@
 
  function updateOrder(){
     var settings = {
-      "url": "http://localhost:8080/api/orders/"+$('#id').text()+"/edit",
+      "url": "http://localhost:8080/api/orders/"+$('#id').val()+"/edit",
       "method": "PUT",
       "timeout": 100,
       "headers": {
         "Content-Type": "application/json"
       },
       "data": JSON.stringify({
-        "id": $('#id').text(),
+        "id": $('#id').val(),
         "partNo": $('#partNo').val(),
-        "quantityOrder": $('#quantity').val(),
+        "quantityOrder": $('#quantityOrder').val(),
         "deliveryDateOrder": $('#deliveryDate').val(),
       }),
 };
@@ -45,7 +89,7 @@ $.ajax(settings).done(function (response) {
 });
 }
 
-    </script>
+</script>
 </head>
 <body>
 <div class="container">
@@ -80,47 +124,24 @@ $.ajax(settings).done(function (response) {
     </div>
 
     <h3 th:text="${title}"></h3>
+    <input id="id" hidden th:value="${id}">
+
     <form method="post" th:action="${'/pages/orders/'+id+'/edit'}" >
-    <table>
-        <tr>
-            <th>Id: </th>
-            <td id="id" th:text="${order.getId()}" th:value="${order.getId()}"/>
-        </tr>
-        <tr>
-            <th>Order date: </th>
-            <td th:text="${order.getOrderDate()}"/>
-        </tr>
-
-        <tr>
-            <th>Supplier: </th>
-            <td th:text="${order.getSupplier().getName()}"/>
-        </tr>
-
-        <tr>
-            <th>Part No: </th>
-            <td>
-                <select  id="partNo" name="partNo">
-                    <option th:value="${order.getPartNo()}" th:text="${order.getPartNo()}"></option>
-                    <option></option>
-                        <option th:each="part : ${parts}"
-                                th:value="${part.getNumber()}"
-                                th:text="${part.getNumber()}"></option>
-                    </select>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>Quantity order: </th>
-            <td>
-                <input type="number" id="quantity" name="quantity" th:value="${order.getQuantityOrder()}">
-            </td>
-        </tr>
-        <tr>
-            <th>Delivery date order: </th>
-            <td>
-                <input type="date" id="deliveryDate" name="deliveryDate" th:value="${order.getDeliveryDateOrder()}">
-            </td>
-        </tr>
+        <style type="text/css">
+            #vertical thead,#vertical tbody{
+                display:inline-block;
+            }
+        </style>
+    <table id="vertical">
+        <thead>
+        <tr><th>Id: </th></tr>
+        <tr><th>Order date: </th></tr>
+        <tr><th>Supplier: </th></tr>
+        <tr><th>Part No: </th></tr>
+        <tr><th>Quantity order: </th></tr>
+        <tr><th>Delivery date order: </th></tr>
+        </thead >
+        <tbody id="orderData"></tbody>
     </table>
 
     <button type="submit" class="btn btn-success"  onclick="updateOrder()">Update</button>

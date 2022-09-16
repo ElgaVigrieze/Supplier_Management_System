@@ -45,12 +45,25 @@ border-collapse: separate;
     <script>
 
             $(document).ready(function() {
+            loadSupplier();
             loadPerformance();
             loadTotal();
             loadDelivered();
             loadOpen();
             loadLate();
          });
+
+            function loadSupplier(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers/"+$('#id').val(),
+              "method": "GET",
+              "timeout": 100
+            }
+
+            $.ajax(settings).done(function (response) {
+                $('#supplierName').append(response.name);
+                });
+           }
 
             function loadLate(){
             const settings = {
@@ -167,7 +180,7 @@ border-collapse: separate;
     <div style="background-color: white; width: 100%; height: 700px;">
 <!--        <div style="background-color: lightseagreen; width: 50%; float: left; height: 700px;">-->
             <div style="width: 70%;height: 100%; float: left;">
-                <h1 th:text="${title}"></h1>
+                <h1 id="supplierName" ></h1>
                 <input id="id" th:value="${id}" hidden>
 
                 <details>

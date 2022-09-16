@@ -31,33 +31,19 @@ public class SupplierJSController {
 
     @GetMapping("/suppliers")
     public String supplier() {
-
         return "suppliers_js";
     }
 
     @GetMapping("/orders")
     public String orders(Model model) {
-        var suppliers = repo1.getSuppliers();
-        var parts = repo2.getAllParts();
         model.addAttribute("title", "Orders");
-        model.addAttribute("suppliers", suppliers);
-        model.addAttribute("parts", parts);
         return "orders_js";
     }
-    @PostMapping("/orders")
-    public String ordersSearch() {
-        return "orders_js";
-    }
+
 
     @GetMapping("/new_order")
     public String addOrder(Model model) {
-        var suppliers = repo1.getSuppliers();
-        var parts = repo2.getAllParts();
-
         model.addAttribute("title", "Create new order");
-        model.addAttribute("suppliers", suppliers);
-        model.addAttribute("parts", parts);
-
         return "new_order_js";
     }
 
@@ -78,12 +64,8 @@ public class SupplierJSController {
 
     @GetMapping("/orders/{id}/edit")
     public String updateOrder(@PathVariable int id, Model model) {
-        var order = (Order)repo.getOrder(id);
-        var parts = repo2.getAllParts();
         model.addAttribute("title", "Order No - " + id);
         model.addAttribute("id", id);
-        model.addAttribute("order", order);
-        model.addAttribute("parts", parts);
         if(!repo.orderDelivered(id)){
             return "order_detail_edit_js";
         }
@@ -97,10 +79,8 @@ public class SupplierJSController {
 
     @GetMapping("/orders/{id}/confirm")
     public String deleteOrderId(@PathVariable int id, Model model) {
-        var order = (Order)repo.getOrder(id);
         model.addAttribute("id", id);
-        model.addAttribute("order", order);
-        model.addAttribute("confirmDelete", order);
+        model.addAttribute("confirmDelete", repo.getOrder(id));
         return "order_detail_edit_js";
     }
     @PostMapping("/orders/{id}/confirm")
@@ -113,11 +93,7 @@ public class SupplierJSController {
         var year = LocalDate.now().getYear();
         var monthsString = new DateFormatSymbols().getMonths();
         var monthNames= Arrays.asList(monthsString);
-        var months= IntStream.range(1, 12).boxed().collect(Collectors.toList());
-        model.addAttribute("months", months);
         model.addAttribute("monthNames", monthNames);
-        model.addAttribute("supplier", new Supplier());
-        model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "Orders");
         model.addAttribute("title3",  "Delivery performance");
         model.addAttribute("year", year);
@@ -133,16 +109,13 @@ public class SupplierJSController {
 
     @GetMapping("/suppliers/{id}/orders")
     public String viewSupplierAllOrders(@PathVariable int id, Model model) {
-        model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "All orders");
         model.addAttribute("id", id);
-
         return "supplier_orders";
     }
 
     @GetMapping("/suppliers/{id}/orders_late")
     public String viewSupplierLateOrders(@PathVariable int id, Model model) {
-        model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "Late orders");
         model.addAttribute("id", id);
         return "supplier_orders";
@@ -150,7 +123,6 @@ public class SupplierJSController {
 
     @GetMapping("/suppliers/{id}/orders_delivered")
     public String viewSupplierDeliveredOrders(@PathVariable int id, Model model) {
-        model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "Delivered orders");
         model.addAttribute("id", id);
         return "supplier_orders";
@@ -158,7 +130,6 @@ public class SupplierJSController {
 
     @GetMapping("/suppliers/{id}/orders_open")
     public String viewSupplierOpenOrders(@PathVariable int id, Model model) {
-        model.addAttribute("title",  repo1.getSupplierName(id));
         model.addAttribute("title2",  "Open orders");
         model.addAttribute("id", id);
 
@@ -176,13 +147,11 @@ public class SupplierJSController {
     public String viewDeliveryPerformance(Model model) {
         var monthsString = new DateFormatSymbols().getMonths();
         var monthNames= Arrays.asList(monthsString);
-        var months= IntStream.range(1, 12).boxed().collect(Collectors.toList());
         var year = LocalDate.now().getYear();
         model.addAttribute("title",  "Delivery performance");
         model.addAttribute("title2",  "Overall per month");
         model.addAttribute("title3",  "Per supplier");
         model.addAttribute("year", year);
-        model.addAttribute("months", months);
         model.addAttribute("monthNames", monthNames);
 
         return "dpm";

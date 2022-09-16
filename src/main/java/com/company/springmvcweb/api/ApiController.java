@@ -70,32 +70,31 @@ public class ApiController {
         repo1.update(dto);
     }
 
+
     @PostMapping(value="/new_order")
     public void saveOrder(@RequestBody OrderSaveDto dto) {
         repo.add(dto);
     }
 
+    @GetMapping("/orders/{id}")
+    public Order getOrder(@PathVariable int id)  {
+        return (Order)repo.getOrder(id);
+    }
+
+    @GetMapping("/suppliers/{id}")
+    public Supplier getSupplier(@PathVariable int id)  {
+        return (Supplier)repo1.getSupplier(id);
+    }
+
     @PutMapping("/orders/{id}/edit")
-    public String updateOrder(@RequestBody OrderSaveDto dto)  {
+    public void updateOrder(@RequestBody OrderSaveDto dto)  {
         repo.update(dto);
-        return "order updated";
     }
 
     @DeleteMapping("/orders/{id}/delete")
-    public String deleteOrder(@PathVariable int id) {
+    public void deleteOrder(@PathVariable int id) {
         repo.delete(id);
-        return "order deleted";
     }
-
-//    @GetMapping("/orders/{id}/delete")
-//    public ModelAndView deleteOrder() {
-//        return new ModelAndView("redirect:/orders");
-//    }
-//@GetMapping("/dpm_suppliers")
-//public Iterable<Supplier>viewDeliveryPerformance() {
-//    return repo1.getSuppliers();
-//}
-
 
     @GetMapping("/dpm")
     public List<Double> viewDeliveryPerformance1() {
@@ -207,6 +206,11 @@ public class ApiController {
     @GetMapping("/dpm/{id}/orders_late/{month}")
     public Iterable<Order> viewOrdersLate( @PathVariable int month, @PathVariable int id) {
         return repo.getOrdersDeliveredLatePerMonth(month, id);
+    }
+
+    @GetMapping("/parts")
+    public Iterable<Part>totalParts() {
+        return repo2.getAllParts();
     }
 
 }

@@ -28,8 +28,20 @@
          urlApi = "http://localhost:8080/api/dpm/suppliers/"+$('#id').val()+"/orders_late";
          }
          loadAll();
+         loadSupplier();
          });
 
+            function loadSupplier(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers/"+$('#id').val(),
+              "method": "GET",
+              "timeout": 100
+            }
+
+            $.ajax(settings).done(function (response) {
+                $('#supplierName').append(response.name);
+                });
+           }
 
     function loadAll(){
         const settings = {
@@ -88,7 +100,7 @@
         </div>
     </nav>
 
-    <h3 th:text="${title}"></h3>
+    <h3 id="supplierName" ></h3>
     <h5 th:text="${title2}"></h5>
     <input hidden id="id" th:value="${id}">
 

@@ -25,7 +25,7 @@ public class PartRepository {
             var session = factory.openSession();
 
             try {
-                return session.createQuery("FROM Part").list();
+                return session.createQuery("FROM Part ORDER BY number ASC").list();
             } catch (HibernateException exception) {
                 System.err.println(exception);
             } finally {
