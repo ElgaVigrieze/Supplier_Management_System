@@ -69,7 +69,8 @@ public class SupplierJSController {
         if(!repo.orderDelivered(id)){
             return "order_detail_edit_js";
         }
-        return "order_detail_disabled_js";
+//        return "order_detail_disabled_js";
+        return "order_detail_edit_js";
     }
 
     @PostMapping("/orders/{id}/edit")

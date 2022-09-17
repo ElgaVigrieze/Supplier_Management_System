@@ -17,8 +17,20 @@
             loadOrder();
             loadParts();
             var part = "";
+            var delivered = "";
          });
 
+            function submitDisable(delivered){
+            if(delivered!=null){
+                document.getElementById("btn").disabled = true;
+                document.getElementById("btn1").disabled = true;
+                document.getElementById("btn2").disabled = true;
+           }else{
+                document.getElementById("btn").disabled = false;
+                document.getElementById("btn1").disabled = false;
+                document.getElementById("btn2").disabled = false;
+            }
+            }
 
             function loadOrder(){
             const settings = {
@@ -29,14 +41,16 @@
 
             $.ajax(settings).done(function (response) {
             part = response.partNo;
+            delivered = response.deliveryDateReal;
              $('#orderData').append('<tr><td>'+response.id+'</td></tr>');
              $('#orderData').append('<tr><td>'+response.orderDate+'</td></tr>');
              $('#orderData').append('<tr><td>'+response.supplier.name+'</td></tr>');
              $('#orderData').append('<tr><td><select id="partNo"></select></td></tr>');
              $('#orderData').append('<tr><td><input id="quantityOrder" value="'+response.quantityOrder+'"></input></td></tr>');
             $('#orderData').append('<tr><td><input type="date" id="deliveryDate" value="'+response.deliveryDateOrder+'" ></td></tr>');
-
+            submitDisable(delivered);
             });
+
            }
 
         function loadParts(){
@@ -144,9 +158,9 @@ $.ajax(settings).done(function (response) {
         <tbody id="orderData"></tbody>
     </table>
 
-    <button type="submit" class="btn btn-success"  onclick="updateOrder()">Update</button>
-        <a th:href="${'/pages/orders/'+id+'/confirm'}" class="btn btn-danger" role="button">Delete</a>
-        <a th:href="${'/pages/orders/'}" class="btn btn-secondary" role="button">Back</a>
+    <button id="btn" type="submit" name="btn" class="btn btn-success"  onclick="updateOrder()">Update</button>
+        <a  th:href="${'/pages/orders/'+id+'/confirm'}"> <button id="btn1" class="btn btn-danger" role="button"  >Delete</button></a>
+        <a  th:href="${'/pages/orders/'}"> <button id="btn2" class="btn btn-secondary" role="button">Back</button></a>
     </form>
 
 </div>
