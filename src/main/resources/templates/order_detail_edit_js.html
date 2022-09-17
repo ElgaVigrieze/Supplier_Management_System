@@ -4,6 +4,7 @@
 
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -11,25 +12,23 @@
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--    <style>-->
+<!--    .disabled-link {-->
+<!--      pointer-events: none;-->
+<!--    }-->
+<!--    </style>-->
     <script>
 
          $(document).ready(function() {
             loadOrder();
             loadParts();
             var part = "";
-            var delivered = "";
          });
 
-            function submitDisable(delivered){
-            if(delivered!=null){
+            function submitDisable(){
                 document.getElementById("btn").disabled = true;
-                document.getElementById("btn1").disabled = true;
-                document.getElementById("btn2").disabled = true;
-           }else{
-                document.getElementById("btn").disabled = false;
-                document.getElementById("btn1").disabled = false;
-                document.getElementById("btn2").disabled = false;
-            }
+                $('#btn1').removeAttr('href');
+                $('#btn1').addClass("btn btn-danger disabled");
             }
 
             function loadOrder(){
@@ -48,7 +47,9 @@
              $('#orderData').append('<tr><td><select id="partNo"></select></td></tr>');
              $('#orderData').append('<tr><td><input id="quantityOrder" value="'+response.quantityOrder+'"></input></td></tr>');
             $('#orderData').append('<tr><td><input type="date" id="deliveryDate" value="'+response.deliveryDateOrder+'" ></td></tr>');
-            submitDisable(delivered);
+            if(delivered!=null){
+            submitDisable();
+            }
             });
 
            }
@@ -158,9 +159,10 @@ $.ajax(settings).done(function (response) {
         <tbody id="orderData"></tbody>
     </table>
 
-    <button id="btn" type="submit" name="btn" class="btn btn-success"  onclick="updateOrder()">Update</button>
-        <a  th:href="${'/pages/orders/'+id+'/confirm'}"> <button id="btn1" class="btn btn-danger" role="button"  >Delete</button></a>
-        <a  th:href="${'/pages/orders/'}"> <button id="btn2" class="btn btn-secondary" role="button">Back</button></a>
+        <button id="btn" type="submit" class="btn btn-success"  onclick="updateOrder()">Update</button>
+        <a id="btn1" th:href="${'/pages/orders/'+id+'/confirm'}" class="btn btn-danger" role="button">Delete</a>
+        <a id="btn2" th:href="${'/pages/orders/'}" class="btn btn-secondary" role="button">Back</a>
+
     </form>
 
 </div>
