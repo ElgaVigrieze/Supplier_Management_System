@@ -102,8 +102,15 @@ public class SupplierJSController {
         return "supplier_detail_links";
     }
 
+    @GetMapping("/suppliers/{id}/edit")
+    public String updateSupplier(@PathVariable int id, Model model){
+        model.addAttribute("id", id);
+        return "supplier_detail_edit";
+    }
+
+
     @PostMapping("/suppliers/{id}/edit")
-    public ModelAndView updateSupplier1() {
+    public ModelAndView updateSupplier1(){
         return new ModelAndView("redirect:/pages/suppliers/{id}");
     }
 

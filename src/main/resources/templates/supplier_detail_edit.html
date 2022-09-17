@@ -12,27 +12,88 @@
             crossorigin="anonymous"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
- function updateSupplier(){
-    var settings = {
-      "url": "http://localhost:8080/api/suppliers/"+$('#id').text()+"/edit",
-      "method": "PUT",
-      "timeout": 100,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "data": JSON.stringify({
-        "id": $('#id').text(),
-        "name": $('#name').val(),
-        "category": $('#category').val(),
-        "vatno": $('#VATNo').val(),
-        "email": $('#eMail').val(),
-      }),
-};
 
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
-}
+     $(document).ready(function() {
+            var supplier = "";
+            var cat = "";
+            loadSupplier();
+            loadSuppliers();
+         });
+
+        function loadSuppliers(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers",
+              "method": "GET",
+              "timeout": 5000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#name').empty();
+             $('#name').append('<option value='+supplier+'>'+supplier+'</option>');
+             response.forEach(function(supplier){
+             $('#name').append('<option value='+supplier.name+'>'+supplier.name+'</option>');
+             loadCategories();
+            });
+            });
+           }
+
+           function loadCategories(){
+            const settings = {
+              "url": "http://localhost:8080/api/categories",
+              "method": "GET",
+              "timeout": 3000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#category').empty();
+             $('#category').append('<option value='+cat+'>'+cat+'</option>');
+             for (var i = 0; i<response.length; i++){
+                 $('#category').append('<option value="'+response[i]+'">'+response[i]+'</option>');
+            }
+            });
+           }
+
+            function loadSupplier(){
+            const settings = {
+              "url": "http://localhost:8080/api/suppliers/"+$('#id').val(),
+              "method": "GET",
+              "timeout": 1000
+            }
+
+            $.ajax(settings).done(function (response) {
+             $('#supplierData').append('<tr><td>'+response.id+'</td></tr>');
+             $('#supplierData').append('<tr><td><select id="name"></td></tr>');
+             $('#supplierData').append('<tr><td><select id="category" onclick="loadCategories()" ></select></td></tr>');
+             $('#supplierData').append('<tr><td><input id="VATNo" value="'+response.vatno+'"></input></td></tr>');
+             $('#supplierData').append('<tr><td><input id="eMail" value="'+response.email+'"></input></td></tr>');
+             cat = response.category;
+             supplier = response.name;
+            });
+           }
+
+         function updateSupplier(){
+            var settings = {
+              "url": "http://localhost:8080/api/suppliers/"+$('#id').val()+"/edit",
+              "method": "PUT",
+              "timeout": 100,
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "data": JSON.stringify({
+                "id": $('#id').val(),
+                "name": $('#name').val(),
+                "category": $('#category').val(),
+                "vatno": $('#VATNo').val(),
+                "email": $('#eMail').val(),
+              }),
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+        });
+        }
+
+
 </script>
 
 </head>
@@ -62,44 +123,30 @@ $.ajax(settings).done(function (response) {
         </div>
     </nav>
 
-
     <h3 th:text="${title}"></h3>
 
-    <form method="post" th:action="${'/pages/suppliers/'+supplier.getId()+'/edit'}" name="supplierSaveDto">
-    <table>
-        <tr>
-            <th>Id: </th>
-            <td id="id" th:value="${supplier.getId()}" th:text="${supplier.getId()}"/>
-        </tr>
-        <tr>
-            <th>Name: </th>
-            <td>
-                <input type="text" id="name" name="name" th:value="${supplier.getName()}">
-            </td>
-        </tr>
-        <tr>
-            <th>Category: </th>
-            <td>
-                <select  id="category" name="category">
-                    <option th:text="${supplier.getCategory()}"></option>
-                    <option></option>
-                    <option>Raw material</option>
-                    <option>Fasteners</option>
-                    <option>Turning/milling</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>VAT number: </th>
-            <td id="VATNo" th:value="${supplier.getVATNo()}" th:text="${supplier.getVATNo()}"/>
-        </tr>
-        <tr>
-            <th>E-mail address: </th>
-            <td>
-                <input type="text" id="eMail" name="eMail" th:value="${supplier.getEMail()}">
-            </td>
-        </tr>
-    </table>
+    <form method="post" th:action="${'/pages/suppliers/'+id+'/edit'}" name="supplierSaveDto">
+
+        <input hidden id="id" th:value="${id}"/>
+
+        <style type="text/css">
+            #vertical thead,#vertical tbody{
+                display:inline-block;
+            }
+        </style>
+        <table id="vertical">
+            <thead>
+            <tr><th>Id: </th></tr>
+            <tr><th>Name: </th></tr>
+            <tr><th>Category </th></tr>
+            <tr><th>VAT No: </th></tr>
+            <tr><th>Email address: </th></tr>
+            </thead >
+            <tbody id="supplierData"></tbody>
+
+        </table>
+
+
         <button type="submit" class="btn btn-success" onclick="updateSupplier()">Update</button>
         <a th:href="${'/pages/suppliers/'+id}" class="btn btn-danger" role="button">Cancel</a>
     </form>

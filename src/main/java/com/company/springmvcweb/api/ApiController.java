@@ -12,6 +12,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.company.springmvcweb.data.Category.getCategoriesPublic;
+
 
 @RestController
 @RequestMapping(value = "/api/", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -27,7 +29,6 @@ public class ApiController {
         repo2 = new PartRepository();
         repo3 = new DeliveryPerformance();
     }
-
 
     @GetMapping("/suppliers")
     public Iterable<Supplier>getSuppliers(){
@@ -59,7 +60,6 @@ public class ApiController {
     public Iterable<Order> searchOrders(@RequestBody OrderSearchDto dto){
         return repo.getOrdersPerSupplierAndOrPartNo(dto);}
 
-
     @PostMapping(value="/new_supplier")
     public void saveSupplier(@RequestBody SupplierSaveDto dto) {
         repo1.add(dto);
@@ -84,6 +84,11 @@ public class ApiController {
     @GetMapping("/suppliers/{id}")
     public Supplier getSupplier(@PathVariable int id)  {
         return (Supplier)repo1.getSupplier(id);
+    }
+
+    @GetMapping("/categories")
+    public List<String> getCategories()  {
+        return getCategoriesPublic();
     }
 
     @PutMapping("/orders/{id}/edit")
